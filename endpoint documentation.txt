@@ -1,0 +1,164 @@
+Use the end point base on description and the data to post and see the response
+ip-address:= http://localhost:4000
+
+POST  ip-address/users  (User registration or Create user Endpoint)
+
+USER-REGISTRATION:
+{
+    "fristname": "Musa",
+    "lastname": "Aminu"
+    "phone": "08091575226",
+    "email": "musaaminugmail.com",
+    "password": "123456"
+}
+
+
+GET-RESPONSE:
+{
+    "_id": "5ee8104f3113914f94531a0f",
+    "name": "Benys",
+    "email": "jame@gmail.com",
+    "phone": 8686786782
+}
+
+ERROR:
+{
+    "error": "User exists"
+}
+
+USER-LOGIN
+POST: http://localhost:4000/api/users/login
+{
+    "email": "musaaminugmail69.com",
+    "password": "123456"
+}
+
+RESPONSE 
+{
+    "code": 200,
+    "message": "Login Successful",
+    "data": {
+        "_id": "66031b6feacff2fdbce8d51b",
+        "fristname": "Ibrahim",
+        "lastname": "Aminu",
+        "phone": "08091575226",
+        "email": "musaaminugmail69.com",
+        "password": "123456",
+        "createdAt": "2024-03-26T19:01:03.193Z",
+        "updatedAt": "2024-03-26T19:01:03.193Z",
+        "__v": 0
+    }
+}
+
+
+
+POST/SEND: CREATE-STORY:
+{
+    "user_id":"66031a32aa28ce0bc3efbf95",
+    "title": "My Journey To Coding",
+    "desc": "Once upon a time"
+}
+
+GET-RESPONSE:
+{
+"code": 200,
+    "statusText": "OK",
+    "msg": "Story Created Successfully",
+    "data": {
+        "user_id": "66031a32aa28ce0bc3efbf95",
+        "title": "My Journey To Coding",
+        "desc": "Once upon a time, nestled in a quaint little town, there lived a curious soul named Lily.",
+        "likes": 0,
+        "dislikes": 0,
+        "_id": "6604070619a27e27653e6eac",
+        "createdAt": "2024-03-27T11:46:14.367Z",
+        "updatedAt": "2024-03-27T11:46:14.367Z",
+        "__v": 0
+}
+}
+
+COMMENT-POST
+http://localhost:4000/api/comment/addcomment
+{
+    "user_id": "66031a32aa28ce0bc3efbf95",
+    "story_id": "66042a05f17b0da5e82e1ddc",
+    "comment_body" : "Its perfect"
+}
+
+RESPONSE
+{
+    "code": 200,
+    "statusText": "Ok",
+    "msg": "A comment has been made",
+    "data": {
+        "user_id": "66031a32aa28ce0bc3efbf95",
+        "story_id": "66042a05f17b0da5e82e1ddc",
+        "comment_body": "Its perfect",
+        "_id": "66042a5af17b0da5e82e1ddf",
+        "createdAt": "2024-03-27T14:16:58.752Z",
+        "updatedAt": "2024-03-27T14:16:58.752Z",
+        "__v": 0
+    }
+}
+
+GET-ALL COMMENTS
+http://localhost:4000/api/comment/
+
+RESPONSE
+    {
+    "code": 200,
+    "statusText": "Ok",
+    "msg": "All Comments",
+    "data": [
+        {
+            "_id": "66041b00f781b953f1e6288f",
+            "user_id": "66031a32aa28ce0bc3efbf95",
+            "story_id": "6604070619a27e27653e6eac",
+            "comment_body": "Very good",
+            "createdAt": "2024-03-27T13:11:28.834Z",
+            "updatedAt": "2024-03-27T13:11:28.834Z",
+            "__v": 0
+        },
+        {
+            "_id": "66042978f17b0da5e82e1dd8",
+            "user_id": "66031a32aa28ce0bc3efbf95",
+            "story_id": "6604070619a27e27653e6eac",
+            "comment_body": "Congratulations",
+            "createdAt": "2024-03-27T14:13:12.822Z",
+            "updatedAt": "2024-03-27T14:13:12.822Z",
+            "__v": 0
+        },
+        {
+            "_id": "66042a5af17b0da5e82e1ddf",
+            "user_id": "66031a32aa28ce0bc3efbf95",
+            "story_id": "66042a05f17b0da5e82e1ddc",
+            "comment_body": "Its perfect",
+            "createdAt": "2024-03-27T14:16:58.752Z",
+            "updatedAt": "2024-03-27T14:16:58.752Z",
+            "__v": 0
+        }
+    ]
+}
+
+
+GET-POST-COMMENT:
+http://localhost:4000/api/comment/:id
+http://localhost:4000/api/comment/66042a05f17b0da5e82e1ddc
+
+RESPONSE
+{
+    "code": 200,
+    "statusText": "Ok",
+    "msg": "Single ost comments",
+    "data": [
+        {
+            "_id": "66042a5af17b0da5e82e1ddf",
+            "user_id": "66031a32aa28ce0bc3efbf95",
+            "story_id": "66042a05f17b0da5e82e1ddc",
+            "comment_body": "Its perfect",
+            "createdAt": "2024-03-27T14:16:58.752Z",
+            "updatedAt": "2024-03-27T14:16:58.752Z",
+            "__v": 0
+        }
+    ]
+}
