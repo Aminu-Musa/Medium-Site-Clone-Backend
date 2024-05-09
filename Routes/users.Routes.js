@@ -1,6 +1,8 @@
 const expRouter = require("express").Router();
+
 const {
   getUsers,
+  getUser,
   postUsers,
   putUsers,
   deleteUsers,
@@ -8,6 +10,7 @@ const {
 } = require("../Controller/users.Controller");
 
 expRouter.get("/", getUsers);
+expRouter.get("/:id", getUser);
 
 expRouter.post("/", postUsers);
 
