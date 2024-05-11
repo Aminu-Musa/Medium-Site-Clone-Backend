@@ -1,11 +1,14 @@
 const expRouter = require("express").Router()
-const {postStory, getStory, deleteStory, updateStory} = require("../Controller/story.controller")
+const {postStory, getStories, getStory, deleteStory, updateStory} = require("../Controller/story.controller")
 
 
-expRouter.post("/poststory", postStory)
-expRouter.get("/", getStory)
-expRouter.put("/", deleteStory)
-expRouter.delete("/", updateStory)
+expRouter.get("/", getStories)
+expRouter.post("/", postStory)
+
+
+expRouter.get("/:id", getStory)
+expRouter.delete("/:id", deleteStory)
+expRouter.put("/:id", updateStory)
 
 
 

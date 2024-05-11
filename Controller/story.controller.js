@@ -2,42 +2,72 @@ const storyModel = require("../Models/story.model");
 
 // POST: /api/story
 const postStory = async (req, res) => {
-  const storyBody = req.body;
-
-  const createStory = new storyModel(storyBody);
-
-  const newStory = await createStory.save();
-
   try {
-    const data = req.body;
-    res.json({
-      code: 200,
-      statusText: "OK",
+    const storyBody = req.body;
+
+    const createStory = new storyModel(storyBody);
+    const newStory = await createStory.save();
+
+    res.status(200).json({
+      statusCode: 200,
+      statusText: "Success",
       msg: "Story Created Successfully",
       data: newStory,
     });
   } catch (err) {
-    res.json({
-      code: 404,
+    res.status(500).json({
+      statusCode: 500,
+      statusText: "An error occurred",
       msg: err.massage,
     });
   }
 };
 
-// GET: /api/story
-const getStory = async (req, res) => {
+// GET: /api/stories
+const getStories = async (req, res) => {
   try {
     const allStories = await storyModel.find();
 
-    res.json({
-      code: 200,
-      msg: "This a Story Url",
+    res.status(200).json({
+      statusCode: 200,
+      statusText: "Success",
+      msg: "All stories",
       data: allStories,
     });
   } catch (err) {
-    res.json({
-      code: 404,
-      statusText: "an error occured",
+    res.status(500).json({
+      statusCode: 500,
+      statusText: "An error occurred",
+      msg: err.message,
+    });
+  }
+};
+
+//GET Single Story
+const getStory = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const singleStory = await storyModel.findById(id);
+
+    if (singleStory) {
+      res.status(200).json({
+        statusCode: 200,
+        statusText: "Success",
+        msg: "Single story",
+        data: singleStory,
+      })
+    } else {
+      res.status(404).json({
+        statusCode: 404,
+        statusText: "Failed",
+        msg: `No story with id: ${id} was found`,
+      });
+    }
+  } catch (err) {
+    res.status(500).json({
+      statusCode: 500,
+      statusText: "An error occurred",
       msg: err.message,
     });
   }
@@ -45,14 +75,27 @@ const getStory = async (req, res) => {
 
 // PUT: /api/story/id
 const updateStory = async (req, res) => {
-  const id = req.params.id;
-
   try {
-    res.json({
-      code: 200,
-      msg: `Story Updated ${id}`,
-      data,
+    const id = req.params.id;
+    const update = await storyModel.findByIdAndUpdate({ _id: id }, req.body, {
+      new: true,
+      runValidators: true,
     });
+
+    if (update) {
+      res.status(200).json({
+        statusCode: 200,
+        statusText: "Successful",
+        msg: `Story id: ${id} has been updated`,
+        data: update,
+      });
+    } else {
+      res.status(404).json({
+        statusCode: 404,
+        statusText: "Failed",
+        msg: `No story with id: ${id} was found`,
+      });
+    }
   } catch (err) {
     res.json({
       code: 404,
@@ -65,14 +108,25 @@ const updateStory = async (req, res) => {
 const deleteStory = async (req, res) => {
   try {
     const id = req.params.id;
-    res.json({
-      code: 200,
-      msg: `Story Updated ${id}`,
-      data,
-    });
-  } catch (error) {
-    res.json({
-      code: 404,
+    const deleteStory = await storyModel.findByIdAndDelete(id);
+
+    if (deleteStory) {
+      res.status(200).json({
+        statusCode: 200,
+        statusText: "Successful",
+        msg: `Story with id: ${id} has been deleted`,
+      });
+    } else {
+      res.status(404).json({
+        statusCode: 404,
+        statusText: "Failed",
+        msg: `No story with id: ${id} was found`,
+      });
+    }
+  } catch (err) {
+    res.status(500).json({
+      statusCode: 500,
+      statusText: "An error occured",
       msg: err.message,
     });
   }
@@ -80,7 +134,8 @@ const deleteStory = async (req, res) => {
 
 module.exports = {
   postStory,
-  getStory,
+  getStories,
   updateStory,
   deleteStory,
+  getStory,
 };

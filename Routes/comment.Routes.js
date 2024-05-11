@@ -2,15 +2,15 @@ const expRouter = require("express").Router();
 const {
   postComment,
   getComment,
-  getSingleComment,
+  getComments,
+  updateComment,
+  deleteComment,
 } = require("../Controller/comment.controller");
 
-
-expRouter.post("/addcomment", postComment);
-expRouter.get("/", getComment);
-expRouter.get("/:id", getSingleComment)
-
-
-
+expRouter.post("/", postComment);
+expRouter.get("/", getComments);
+expRouter.get("/id", getComment);
+expRouter.put("/:id", updateComment);
+expRouter.delete("/:id", deleteComment);
 
 module.exports = expRouter;
