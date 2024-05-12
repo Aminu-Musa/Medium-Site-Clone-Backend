@@ -9,7 +9,7 @@ const {
 
 expRouter.post("/", postComment);
 expRouter.get("/", getComments);
-expRouter.get("/id", getComment);
+expRouter.get("/:id", getComment);
 expRouter.put("/:id", updateComment);
 expRouter.delete("/:id", deleteComment);
 
