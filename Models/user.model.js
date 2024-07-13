@@ -4,7 +4,7 @@ const Schema = mongoose.Schema
 
 const userSchema = new Schema(
   {
-    fristname: {
+    firstname: {
       type: String,
       required: [true, "'firstname' is required"],
     },
@@ -19,7 +19,6 @@ const userSchema = new Schema(
     email: {
       type: String,
       required: [true, "'email' is required"],
-      unique: true
     },
     password: {
       type: String,

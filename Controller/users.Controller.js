@@ -1,16 +1,19 @@
+const bcrypt = require("bcrypt");
 const userModel = require("../Models/user.model");
 
 // @ desc: POST USER
 // @ route: Post/api/users
 const postUsers = async (req, res) => {
   try {
-    const { email } = req.body;
+    const { password, email, firstname, lastname, phone } = req.body
     const newUserData = req.body;
 
-    const checkUser = await  userModel.findOne({email});
+    const checkUser = await userModel.findOne({ email });
 
     if (!checkUser) {
-      const createNewUser = new userModel(newUserData);
+      const salt = await bcrypt.genSalt(10)
+      const hashedPassword = await bcrypt.hash(password, salt)
+      const createNewUser = new userModel({ password: hashedPassword, email, firstname, lastname, phone });
       const newUser = await createNewUser.save();
 
       res.status(200).json({
@@ -21,8 +24,8 @@ const postUsers = async (req, res) => {
       });
       return;
     } else {
-      res.status(200).json({
-        stateCode: 200,
+      res.status(400).json({
+        stateCode: 400,
         statusText: "Duplicate",
         msg: `sorry user email: ${email} has already been registered`,
       });
