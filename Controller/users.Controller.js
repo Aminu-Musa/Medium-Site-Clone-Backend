@@ -154,15 +154,19 @@ const deleteUsers = async (req, res) => {
   }
 };
 
+// LOGIN USER
 const loginUser = async (req, res) => {
   const { email, password } = req.body;
+
   try {
     const checkUser = await userModel.findOne({
       email,
-      password,
+      password
     });
+    
+    const validPassword = await bcrypt.compare(password, checkUser.password)
 
-    if (!checkUser) {
+    if (!validPassword) {
       res.status(404).json({
         statusCode: 404,
         statusText: "Bad Request",
