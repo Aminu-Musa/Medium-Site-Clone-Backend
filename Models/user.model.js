@@ -19,13 +19,30 @@ const userSchema = new Schema(
     email: {
       type: String,
       required: [true, "'email' is required"],
-  
+      unique: true
     },
     password: {
       type: String,
       required: [true, "'email' is required"],
-      min:6
+      min: 6
     },
+
+    profilePicture: {
+      type: String,
+      default: ""
+    },
+    followers:{
+      type: Array,
+      default: []
+    },
+    following:{
+      type: Array,
+      default: []
+    },
+    isAdmin:{
+      type:Boolean,
+      default: false
+    }
   },
   { timestamps: true }
 );

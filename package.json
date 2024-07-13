@@ -21,6 +21,6 @@
   },
   "devDependencies": {
     "colors": "^1.4.0",
-    "nodemon": "^3.1.0"
+    "nodemon": "^3.1.4"
   }
 }
