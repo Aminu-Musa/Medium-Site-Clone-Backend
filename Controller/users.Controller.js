@@ -5,15 +5,13 @@ const userModel = require("../Models/user.model");
 // @ route: Post/api/users
 const postUsers = async (req, res) => {
   try {
-    const { password, email, firstname, lastname, phone } = req.body
+    const {email} = req.body
     const newUserData = req.body;
 
     const checkUser = await userModel.findOne({ email });
 
     if (!checkUser) {
-      const salt = await bcrypt.genSalt(10)
-      const hashedPassword = await bcrypt.hash(password, salt)
-      const createNewUser = new userModel({ password: hashedPassword, email, firstname, lastname, phone });
+      const createNewUser = new userModel(newUserData);
       const newUser = await createNewUser.save();
 
       res.status(200).json({
@@ -157,16 +155,13 @@ const deleteUsers = async (req, res) => {
 // LOGIN USER
 const loginUser = async (req, res) => {
   const { email, password } = req.body;
-
   try {
     const checkUser = await userModel.findOne({
       email,
-      password
+      password,
     });
-    
-    const validPassword = await bcrypt.compare(password, checkUser.password)
 
-    if (!validPassword) {
+    if (!checkUser) {
       res.status(404).json({
         statusCode: 404,
         statusText: "Bad Request",
