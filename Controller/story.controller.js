@@ -76,25 +76,35 @@ const getStory = async (req, res) => {
 // PUT: /api/story/id
 const updateStory = async (req, res) => {
   try {
-    const id = req.params.id;
-    const update = await storyModel.findByIdAndUpdate({ _id: id }, req.body, {
-      new: true,
-      runValidators: true,
-    });
+    const { id } = req.params;
+    const { userId } = req.body
+    const story = await storyModel.findById(id)
 
-    if (update) {
-      res.status(200).json({
-        statusCode: 200,
-        statusText: "Successful",
-        msg: `Story id: ${id} has been updated`,
-        data: update,
+    if (story.userId === userId) {
+      const update = await storyModel.findByIdAndUpdate({ _id: id }, req.body, {
+        new: true,
+        runValidators: true,
       });
-    } else {
-      res.status(404).json({
-        statusCode: 404,
-        statusText: "Failed",
-        msg: `No story with id: ${id} was found`,
-      });
+
+      if (update) {
+        res.status(200).json({
+          statusCode: 200,
+          statusText: "Successful",
+          msg: `Story id: ${id} has been updated`,
+          data: update,
+        });
+      } else {
+        res.status(404).json({
+          statusCode: 404,
+          statusText: "Failed",
+          msg: `No story with id: ${id} was found`,
+        });
+      }
+    }else{
+      res.status(403).json({
+        statusCode:403,
+        statusText: "authorization failed"
+      })
     }
   } catch (err) {
     res.json({

@@ -3,7 +3,7 @@ const Schema = mongoose.Schema;
 
 const storySchema = new Schema(
   {
-    user_id: {
+    userId: {
       type: String,
       required: [true, "user_id is required"],
     },
@@ -15,13 +15,16 @@ const storySchema = new Schema(
       type: String,
       required: [true, "story Description is required"],
     },
+    image:{
+        type: String,
+    },
     likes:{
-        type: Number,
-        default: 0
+        type: Array,
+        default: []
     },
     dislikes:{
-      type: Number,
-      default: 0
+      type: Array,
+      default: []
     }
   },
   { timestamps: true }
