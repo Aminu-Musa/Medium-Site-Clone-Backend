@@ -6,7 +6,9 @@ const {
   postUsers,
   putUsers,
   deleteUsers,
-  loginUser
+  loginUser,
+  followUser,
+  unFollowUser
 } = require("../Controller/users.Controller");
 
 expRouter.get("/", getUsers);
@@ -17,6 +19,10 @@ expRouter.post("/", postUsers);
 expRouter.post("/login", loginUser);
 
 expRouter.put("/:id", putUsers);
+
+expRouter.patch("/follow/:id", followUser);
+expRouter.patch("/unfollow/:id", unFollowUser);
+
 
 expRouter.delete("/:id", deleteUsers);
 

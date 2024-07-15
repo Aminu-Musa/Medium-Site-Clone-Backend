@@ -5,7 +5,7 @@ const userModel = require("../Models/user.model");
 // @ route: Post/api/users
 const postUsers = async (req, res) => {
   try {
-    const {email} = req.body
+    const { email } = req.body
     const newUserData = req.body;
 
     const checkUser = await userModel.findOne({ email });
@@ -36,6 +36,7 @@ const postUsers = async (req, res) => {
   }
 };
 
+
 // @ desc: Get USERS
 // @ route: Get/api/users
 const getUsers = async (req, res) => {
@@ -57,6 +58,7 @@ const getUsers = async (req, res) => {
   }
 };
 
+
 // @ desc: Get USERS
 // @ route: Get/api/user
 const getUser = async (req, res) => {
@@ -64,13 +66,14 @@ const getUser = async (req, res) => {
     const { id } = req.params;
 
     const singleUser = await userModel.findById(id);
+    const { password, updatedAt, ...other } = singleUser._doc
 
     if (singleUser) {
       res.status(200).json({
         statusCode: 200,
         statusText: "OK",
         msg: `user: ${id} retrieved successfully`,
-        data: singleUser,
+        data: other,
       });
     } else {
       res.status(404).json({
@@ -88,11 +91,13 @@ const getUser = async (req, res) => {
   }
 };
 
+
 // @ desc: PUT / UPDATE USER
 // @ route: Put/api/users
 const putUsers = async (req, res) => {
   try {
     const { id } = req.params;
+    const { isAdmin } = req.body
 
     const updateUser = await userModel.findByIdAndUpdate(
       { _id: id },
@@ -100,7 +105,7 @@ const putUsers = async (req, res) => {
       { new: true, runValidators: true }
     );
 
-    if (updateUser) {
+    if (updateUser || isAdmin) {
       res.status(200).json({
         statusCode: 200,
         statusText: "OK",
@@ -122,6 +127,99 @@ const putUsers = async (req, res) => {
     });
   }
 };
+
+
+
+// @ desc: FOLLOW USER
+// @ route: Update/api/users/:id/follow
+// You need to provide a userId in your form
+const followUser = async (req, res) => {
+  const { id } = req.params
+  const { userId } = req.body
+
+  // CHECKING IF CURRENT USER WANT'S TO FOLLOWING HIMSELF
+  if (userId !== id) {
+    try {
+      const user_to_be_followed = await userModel.findById(id)
+      const current_user = await userModel.findById(userId)
+
+      // CHECKING IF CURRENT USER IS ALREADY FOLLOWING THE USER
+      if (!user_to_be_followed.followers.includes(userId)) {
+        await user_to_be_followed.updateOne({ $push: { followers: userId } })
+        await current_user.updateOne({ $push: { followings: id } })
+        res.status(200).json({
+          statusCode: 200,
+          statusText: `User ${id} has been followed`
+        })
+      } else {
+        res.status(403).json({
+          statusCode: 403,
+          statusText: `Sorry you're already following this user ${id}`
+        });
+      }
+
+    } catch (err) {
+      res.status(500).json({
+        statusCode: 500,
+        statusText: "An error occured",
+        msg: err.message,
+      })
+    }
+
+  } else {
+    res.status(403).json({
+      statusCode: 403,
+      statusText: "Sorry you can't follow yourself"
+    });
+  }
+}
+
+
+
+// @ desc: UNFOLLOW USER
+// @ route: Update/api/users/:id/follow
+// You need to provide a userId in your form
+const unFollowUser = async (req, res) => {
+  const { id } = req.params
+  const { userId } = req.body
+
+  // CHECKING IF CURRENT USER WANT'S TO FOLLOWING HIMSELF
+  if (userId !== id) {
+    try {
+      const user_to_be_followed = await userModel.findById(id)
+      const current_user = await userModel.findById(userId)
+
+      // CHECKING IF CURRENT USER IS ALREADY FOLLOWING THE USER
+      if (user_to_be_followed.followers.includes(userId)) {
+        await user_to_be_followed.updateOne({ $pull: { followers: userId } })
+        await current_user.updateOne({ $pull: { followings: id } })
+        res.status(200).json({
+          statusCode: 200,
+          statusText: `User ${id} has been unfollowed`
+        })
+      } else {
+        res.status(403).json({
+          statusCode: 403,
+          statusText: `Sorry you're not following this user ${id}`
+        });
+      }
+
+    } catch (err) {
+      res.status(500).json({
+        statusCode: 500,
+        statusText: "An error occured",
+        msg: err.message,
+      })
+    }
+
+
+  } else {
+    res.status(403).json({
+      statusCode: 403,
+      statusText: "Sorry you can't unfollow yourself"
+    });
+  }
+}
 
 // @ desc: DELETE USER
 // @ route: Delete/api/users
@@ -183,6 +281,10 @@ const loginUser = async (req, res) => {
   }
 };
 
+
+
+
+
 module.exports = {
   getUsers,
   getUser,
@@ -190,4 +292,6 @@ module.exports = {
   putUsers,
   deleteUsers,
   loginUser,
+  followUser,
+  unFollowUser
 };

@@ -34,13 +34,26 @@ const userSchema = new Schema(
       type: Array,
       default: []
     },
-    following:{
+    followings:{
       type: Array,
       default: []
     },
     isAdmin:{
       type:Boolean,
       default: false
+    },
+    desc:{
+      type: String
+    },
+    city:{
+      type: String
+    },
+    from:{
+      type: String
+    },
+    relationship:{
+      type:Number,
+      enum:[1,2,3]
     }
   },
   { timestamps: true }
